@@ -2,15 +2,23 @@ import React from 'react';
 import Lottie from 'lottie-react';
 import unauthorize from '../assets/lootie/unauthorize.json';
 
-const UnauthorizedAnimation= ({ className = '' }) => {
-  return (<>
-    <div className={`flex justify-center items-center bg-gradient-to-r from-green-100 to-lime-200 min-h-screen ${className}`}>
-      <ul>
-        <li><h1 className='flex justify-center text-5xl text-red-600 font-bold '>401:Unauthorized access</h1></li>
-      <li><Lottie animationData={unauthorize} loop autoplay className="w-[500px] h-[500px]" /></li>
-      </ul>
+const UnauthorizedAnimation = ({ className = '' }) => {
+  return (
+    <div
+      className={`flex flex-col justify-center items-center bg-gradient-to-r from-green-100 to-lime-200 min-h-screen px-4 ${className}`}
+    >
+      <h1 className="text-center text-red-600 font-bold 
+        text-3xl sm:text-4xl lg:text-5xl mb-6">
+        401: Unauthorized Access
+      </h1>
+
+      <Lottie
+        animationData={unauthorize}
+        loop
+        autoplay
+        className="w-[250px] h-[250px] sm:w-[350px] sm:h-[350px] lg:w-[500px] lg:h-[500px]"
+      />
     </div>
-     </>
   );
 };
 

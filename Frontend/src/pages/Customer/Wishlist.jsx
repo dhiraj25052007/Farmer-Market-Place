@@ -7,6 +7,7 @@ import { useAuth } from '../../context/AuthContext';
 import { motion } from 'framer-motion';
 import { AiFillStar, AiOutlineHeart, AiFillHeart } from 'react-icons/ai';
 import { Link } from 'react-router-dom';
+import toast from 'react-hot-toast';
 
 const Wishlist = () => {
   const { token } = useAuth();
@@ -24,6 +25,7 @@ const Wishlist = () => {
     }, {
       headers: { Authorization: `Bearer ${token}` }
     });
+    toast.success("Removed From Wishlist")
     setWishlist(wishlist.filter(p => p._id !== id));
   };
 

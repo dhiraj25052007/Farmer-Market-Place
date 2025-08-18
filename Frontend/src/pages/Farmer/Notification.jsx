@@ -31,7 +31,7 @@ const Notification = () => {
         headers: { Authorization: `Bearer ${token}` },
       });
       setNotifications((prev) => prev.filter((n) => n._id !== id));
-      toast.success('Notification marked as read and deleted');
+      toast.success('Notification marked as read ');
     } catch (err) {
       toast.error('Failed to mark as read');
     }

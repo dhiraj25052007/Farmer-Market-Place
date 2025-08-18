@@ -1,6 +1,6 @@
 // File: src/layouts/FarmerLayout.jsx
 import React, { useState } from "react";
-import { Outlet, Link, useNavigate } from "react-router-dom";
+import { Outlet, Link, useNavigate, useLocation } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { useAuth } from "../context/AuthContext";
 import {
@@ -20,8 +20,10 @@ import {
 const FarmerLayout = () => {
   const { logout } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
   const [isOpen, setIsOpen] = useState(true);
   const [isMobileOpen, setIsMobileOpen] = useState(false);
+  const [activeItem, setActiveItem] = useState(location.pathname);
 
   const handleLogout = () => {
     logout();
@@ -51,34 +53,37 @@ const FarmerLayout = () => {
             {isOpen ? "Farmer Dashboard" : "FD"}
           </div>
           <ul className="space-y-2 px-2">
-            {menuItems.map((item, idx) => (
-              <motion.li key={idx} whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.98 }}>
-                <Link
-                  to={item.path}
-                  className="group flex items-center gap-2 px-2.5 py-1.5 
-                    bg-gradient-to-r from-green-100 to-green-200 
-                    text-green-800 font-medium rounded-full 
-                    border border-green-200
-                    hover:from-green-100 hover:to-green-200 
-                    hover:border-green-300 
-                    transition-all duration-300 ease-in-out 
-                    shadow-sm hover:shadow-md scale-100 hover:scale-[1.03]"
-                >
-                  {item.icon}
-                  <AnimatePresence>
-                    {isOpen && (
-                      <motion.span
-                        initial={{ opacity: 0, x: -10 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        exit={{ opacity: 0, x: -10 }}
-                      >
-                        {item.label}
-                      </motion.span>
-                    )}
-                  </AnimatePresence>
-                </Link>
-              </motion.li>
-            ))}
+            {menuItems.map((item, idx) => {
+              const isActive = activeItem.includes(item.path);
+              return (
+                <motion.li key={idx} whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.98 }}>
+                  <Link
+                    to={item.path}
+                    onClick={() => setActiveItem(item.path)}
+                    className={`group flex items-center gap-2 px-2.5 py-1.5 rounded-full border transition-all duration-300 ease-in-out shadow-sm scale-100
+                      ${
+                        isActive
+                          ? "bg-orange-400 text-white border-green-700 shadow-md"
+                          : "bg-gradient-to-r from-green-100 to-green-200 text-green-800 border-green-200 hover:from-green-100 hover:to-green-200 hover:border-green-300 hover:shadow-md hover:scale-[1.03]"
+                      }`}
+                  >
+                    {item.icon}
+                    <AnimatePresence>
+                      {isOpen && (
+                        <motion.span
+                          initial={{ opacity: 0, x: -10 }}
+                          animate={{ opacity: 1, x: 0 }}
+                          exit={{ opacity: 0, x: -10 }}
+                          className="whitespace-nowrap"
+                        >
+                          {item.label}
+                        </motion.span>
+                      )}
+                    </AnimatePresence>
+                  </Link>
+                </motion.li>
+              );
+            })}
           </ul>
         </div>
 
@@ -123,17 +128,28 @@ const FarmerLayout = () => {
               transition={{ duration: 0.3 }}
               className="grid grid-cols-2 gap-2 p-3"
             >
-              {menuItems.map((item, idx) => (
-                <Link
-                  key={idx}
-                  to={item.path}
-                  className="flex flex-col items-center justify-center bg-white/90 text-green-700 font-semibold rounded-lg py-3 hover:bg-white transition-all duration-300 shadow-md hover:shadow-lg"
-                  onClick={() => setIsMobileOpen(false)}
-                >
-                  <span className="text-2xl mb-1">{item.icon}</span>
-                  <span className="text-sm">{item.label}</span>
-                </Link>
-              ))}
+              {menuItems.map((item, idx) => {
+                const isActive = activeItem.includes(item.path);
+                return (
+                  <Link
+                    key={idx}
+                    to={item.path}
+                    onClick={() => {
+                      setActiveItem(item.path);
+                      setIsMobileOpen(false);
+                    }}
+                    className={`flex flex-col items-center justify-center font-semibold rounded-lg py-3 transition-all duration-300 shadow-md hover:shadow-lg
+                      ${
+                        isActive
+                          ? "bg-green-500 text-white"
+                          : "bg-white/90 text-green-700 hover:bg-white"
+                      }`}
+                  >
+                    <span className="text-2xl mb-1">{item.icon}</span>
+                    <span className="text-sm">{item.label}</span>
+                  </Link>
+                );
+              })}
 
               <button
                 onClick={() => {

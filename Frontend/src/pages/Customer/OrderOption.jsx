@@ -17,7 +17,7 @@ const OrderOptions = ({ items, total, productId, quantity }) => {
   const [method, setMethod] = useState('cod'); 
 
   const user = JSON.parse(localStorage.getItem('user'));
-  const customerId = user?.id;
+  const customerId = user?.id||user._id;
 
   // Calculate charges
   const shipping = parseFloat((total * 0.10).toFixed(2));

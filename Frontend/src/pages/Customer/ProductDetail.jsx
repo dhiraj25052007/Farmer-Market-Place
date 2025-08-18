@@ -1,13 +1,18 @@
 // File: src/pages/ProductDetail.jsx
 
-import React, { useEffect, useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
-import axios from 'axios';
-import { motion } from 'framer-motion';
-import { AiFillStar, AiOutlineShoppingCart, AiOutlineHeart, AiFillHeart } from 'react-icons/ai';
-import { useAuth } from '../../context/AuthContext';
-import OrderOptions from '../Customer/OrderOption';
-import { toast } from 'react-hot-toast';
+import React, { useEffect, useState } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import axios from "axios";
+import { motion } from "framer-motion";
+import {
+  AiFillStar,
+  AiOutlineShoppingCart,
+  AiOutlineHeart,
+  AiFillHeart,
+} from "react-icons/ai";
+import { useAuth } from "../../context/AuthContext";
+import OrderOptions from "../Customer/OrderOption";
+import { toast } from "react-hot-toast";
 
 const ProductDetail = () => {
   const { id } = useParams();
@@ -20,7 +25,7 @@ const ProductDetail = () => {
   const [wishlistIds, setWishlistIds] = useState([]);
   const [showOrder, setShowOrder] = useState(false);
   const [recommended, setRecommended] = useState([]);
-  const user = JSON.parse(localStorage.getItem('user'));
+  const user = JSON.parse(localStorage.getItem("user"));
 
   // Fetch product details
   useEffect(() => {
@@ -29,7 +34,7 @@ const ProductDetail = () => {
         const res = await axios.get(`http://localhost:5000/api/products/${id}`);
         setProduct(res.data);
       } catch {
-        setError('Product not found');
+        setError("Product not found");
       }
     };
     fetchProduct();
@@ -37,18 +42,20 @@ const ProductDetail = () => {
 
   // Fetch cart + wishlist only if customer
   useEffect(() => {
-    if (!token || user?.role !== 'customer') return;
+    if (!token || user?.role !== "customer") return;
 
     axios
-      .get('http://localhost:5000/api/cart', {
+      .get("http://localhost:5000/api/cart", {
         headers: { Authorization: `Bearer ${token}` },
         withCredentials: true,
       })
-      .then((res) => setCartIds(res.data.items.map((item) => item.productId._id)))
+      .then((res) =>
+        setCartIds(res.data.items.map((item) => item.productId._id))
+      )
       .catch(() => setCartIds([]));
 
     axios
-      .get('http://localhost:5000/api/wishlist', {
+      .get("http://localhost:5000/api/wishlist", {
         headers: { Authorization: `Bearer ${token}` },
       })
       .then((res) => setWishlistIds(res.data.products.map((p) => p._id)))
@@ -66,7 +73,7 @@ const ProductDetail = () => {
         );
         setRecommended(filtered);
       } catch (err) {
-        console.error('Recommended fetch failed:', err);
+        console.error("Recommended fetch failed:", err);
       }
     };
     fetchRecommended();
@@ -75,7 +82,10 @@ const ProductDetail = () => {
   // Render stars
   const renderStars = (rating) =>
     Array.from({ length: 5 }, (_, i) => (
-      <AiFillStar key={i} className={i < rating ? 'text-yellow-400' : 'text-gray-300'} />
+      <AiFillStar
+        key={i}
+        className={i < rating ? "text-yellow-400" : "text-gray-300"}
+      />
     ));
 
   const isExpired = (expiryDate) => new Date(expiryDate) < new Date();
@@ -83,57 +93,62 @@ const ProductDetail = () => {
   // Toggle cart
   const toggleCart = async () => {
     if (!token) {
-      toast.error('Please log in to add to cart');
+      toast.error("Please log in to add to cart");
       return;
     }
-    if (user?.role !== 'customer') {
-      toast.error('Only customers can purchase');
+    if (user?.role !== "customer") {
+      toast.error("Only customers can purchase");
       return;
     }
     const exists = cartIds.includes(product._id);
     try {
       await axios.post(
-        `http://localhost:5000/api/cart/${exists ? 'remove' : 'add'}`,
+        `http://localhost:5000/api/cart/${exists ? "remove" : "add"}`,
         { productId: product._id, quantity },
         { headers: { Authorization: `Bearer ${token}` } }
       );
       setCartIds((prev) =>
-        exists ? prev.filter((pid) => pid !== product._id) : [...prev, product._id]
+        exists
+          ? prev.filter((pid) => pid !== product._id)
+          : [...prev, product._id]
       );
-      toast.success(exists ? 'Removed from cart' : 'Added to cart');
+      toast.success(exists ? "Removed from cart" : "Added to cart");
     } catch {
-      toast.error('Cart operation failed');
+      toast.error("Cart operation failed");
     }
   };
 
   // Toggle wishlist
   const toggleWishlist = async () => {
     if (!token) {
-      toast.error('Please log in to use wishlist');
+      toast.error("Please log in to use wishlist");
       return;
     }
-    if (user?.role !== 'customer') {
-      toast.error('Only customers can use wishlist');
+    if (user?.role !== "customer") {
+      toast.error("Only customers can use wishlist");
       return;
     }
     const exists = wishlistIds.includes(product._id);
     try {
       await axios.post(
-        `http://localhost:5000/api/wishlist/${exists ? 'remove' : 'add'}`,
+        `http://localhost:5000/api/wishlist/${exists ? "remove" : "add"}`,
         { productId: product._id },
         { headers: { Authorization: `Bearer ${token}` } }
       );
       setWishlistIds((prev) =>
-        exists ? prev.filter((pid) => pid !== product._id) : [...prev, product._id]
+        exists
+          ? prev.filter((pid) => pid !== product._id)
+          : [...prev, product._id]
       );
-      toast.success(exists ? 'Removed from wishlist' : 'Added to wishlist');
+      toast.success(exists ? "Removed from wishlist" : "Added to wishlist");
     } catch {
-      toast.error('Wishlist operation failed');
+      toast.error("Wishlist operation failed");
     }
   };
 
   if (error) return <p className="text-center mt-10 text-red-600">{error}</p>;
-  if (!product) return <p className="text-center mt-10 text-gray-600">Loading...</p>;
+  if (!product)
+    return <p className="text-center mt-10 text-gray-600">Loading...</p>;
 
   const discount = Math.floor(product.price * 0.1);
   const discountedPrice = product.price - discount;
@@ -148,7 +163,7 @@ const ProductDetail = () => {
       <div className="max-w-5xl mx-auto bg-white rounded-xl shadow-lg p-6 grid md:grid-cols-2 gap-6">
         <div className="relative">
           <img
-            src={product.imageUrl || 'https://via.placeholder.com/400'}
+            src={product.imageUrl || "https://via.placeholder.com/400"}
             alt={product.name}
             className="rounded-xl w-full h-80 object-cover"
           />
@@ -156,12 +171,18 @@ const ProductDetail = () => {
             onClick={toggleWishlist}
             className="absolute top-4 right-4 text-red-500 text-2xl"
           >
-            {wishlistIds.includes(product._id) ? <AiFillHeart /> : <AiOutlineHeart />}
+            {wishlistIds.includes(product._id) ? (
+              <AiFillHeart />
+            ) : (
+              <AiOutlineHeart />
+            )}
           </button>
         </div>
 
         <div>
-          <h2 className="text-3xl font-bold text-green-800 mb-2">{product.name}</h2>
+          <h2 className="text-3xl font-bold text-green-800 mb-2">
+            {product.name}
+          </h2>
           <p className="text-lg text-gray-700 mb-1 font-semibold">
             Category: {product.category}
           </p>
@@ -174,8 +195,10 @@ const ProductDetail = () => {
               Original: ₹{product.price}
             </p>
             <p className="text-lg text-green-700 font-bold">
-              Now: ₹{discountedPrice}{' '}
-              <span className="text-sm text-green-600 font-bold">(Save ₹{discount})</span>
+              Now: ₹{discountedPrice}{" "}
+              <span className="text-sm text-green-600 font-bold">
+                (Save ₹{discount})
+              </span>
             </p>
           </div>
           <p className="text-sm text-gray-600 mb-4">{product.description}</p>
@@ -193,7 +216,9 @@ const ProductDetail = () => {
 
           <div className="mt-6 flex flex-wrap items-center gap-4">
             <div>
-              <label className="block text-sm font-medium mb-1">Quantity:</label>
+              <label className="block text-sm font-medium mb-1">
+                Quantity:
+              </label>
               <input
                 type="number"
                 value={quantity}
@@ -209,10 +234,12 @@ const ProductDetail = () => {
               whileTap={{ scale: 0.95 }}
               whileHover={{ scale: 1.05 }}
               onClick={toggleCart}
-              className="bg-green-600 text-white px-5 py-2 mt-5 md:mt-8 rounded-lg hover:bg-green-700 transition flex items-center gap-2 shadow-md"
+              className="bg-green-600 text-white px-3 py-2 mt-5 md:mt-8 rounded-lg hover:bg-green-700 transition flex items-center gap-2 shadow-md"
             >
               <AiOutlineShoppingCart className="text-lg" />
-              {cartIds.includes(product._id) ? 'Remove from Cart' : 'Add to Cart'}
+              {cartIds.includes(product._id)
+                ? "Remove from Cart"
+                : "Add to Cart"}
             </motion.button>
 
             <motion.button
@@ -220,11 +247,11 @@ const ProductDetail = () => {
               whileHover={{ scale: 1.05 }}
               onClick={() => {
                 if (!token) {
-                  toast.error('Please log in to purchase');
+                  toast.error("Please log in to purchase");
                   return;
                 }
-                if (user?.role !== 'customer') {
-                  toast.error('Only customers can purchase');
+                if (user?.role !== "customer") {
+                  toast.error("Only customers can purchase");
                   return;
                 }
                 setShowOrder(true);
@@ -233,12 +260,23 @@ const ProductDetail = () => {
             >
               Buy Now
             </motion.button>
+
+            <motion.button
+              whileTap={{ scale: 0.95 }}
+              whileHover={{ scale: 1.05 }}
+              onClick={() => navigate("/reviews")}
+              className="bg-rose-500 text-white px-5 py-2 mt-5 md:mt-8 rounded-lg hover:bg-rose-700 transition shadow-md"
+            >
+              Reviews
+            </motion.button>
           </div>
 
           {showOrder && (
             <div className="mt-6">
               <OrderOptions
-                items={[{ productId: product, quantity, price: discountedPrice }]}
+                items={[
+                  { productId: product, quantity, price: discountedPrice },
+                ]}
                 total={discountedPrice * quantity}
               />
             </div>
@@ -248,7 +286,9 @@ const ProductDetail = () => {
 
       {recommended.length > 0 && (
         <div className="max-w-5xl mx-auto mt-10">
-          <h3 className="text-3xl font-bold text-green-800 mb-4">🛒 Recommended Products</h3>
+          <h3 className="text-3xl font-bold text-green-800 mb-4">
+            🛒 Recommended Products
+          </h3>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
             {recommended.map((item, idx) => {
               const discount = Math.floor(item.price * 0.1);
@@ -264,11 +304,13 @@ const ProductDetail = () => {
                   className="bg-white shadow-md p-4 rounded-xl border hover:shadow-lg transition"
                 >
                   <img
-                    src={item.imageUrl || 'https://via.placeholder.com/200'}
+                    src={item.imageUrl || "https://via.placeholder.com/200"}
                     alt={item.name}
                     className="w-full h-40 object-cover rounded"
                   />
-                  <h4 className="text-lg font-semibold mt-2 text-gray-800">{item.name}</h4>
+                  <h4 className="text-lg font-semibold mt-2 text-gray-800">
+                    {item.name}
+                  </h4>
                   <span className="inline-block bg-yellow-200 text-yellow-800 text-xs font-medium px-2 py-1 rounded-full mt-1">
                     Offer
                   </span>

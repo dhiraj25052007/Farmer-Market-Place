@@ -43,6 +43,7 @@ import OrderTracking from "./pages/Customer/orderTracking.jsx";
 import Certification from "./pages/Certification.jsx";
 import EditProfile from "./pages/EditProfile.jsx";
 import EditFProfile from "./pages/EditFProfle.jsx";
+import Reviews from "./pages/Reviews.jsx";
 
 axios.defaults.withCredentials = true;
 
@@ -59,6 +60,8 @@ function AppRoutes() {
         <Route path="/about" element={<About />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/certificate" element={<Certification />} />
+                <Route path="/reviews" element={<Reviews />} />
+
 
         <Route path="/unauthorized" element={<UnauthorizedAnimation />} />
 
