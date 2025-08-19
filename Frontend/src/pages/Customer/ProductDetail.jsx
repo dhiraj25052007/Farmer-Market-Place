@@ -14,6 +14,9 @@ import { useAuth } from "../../context/AuthContext";
 import OrderOptions from "../Customer/OrderOption";
 import { toast } from "react-hot-toast";
 
+// Helper: random reviewer names
+const randomNames = ["Rahul S.", "Priya M.", "Ankit K.", "Sneha R.", "Amit P."];
+
 const ProductDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -25,6 +28,8 @@ const ProductDetail = () => {
   const [wishlistIds, setWishlistIds] = useState([]);
   const [showOrder, setShowOrder] = useState(false);
   const [recommended, setRecommended] = useState([]);
+  const [showReviews, setShowReviews] = useState(false);
+  const [reviews, setReviews] = useState([]); // ✅ now stored in state
   const user = JSON.parse(localStorage.getItem("user"));
 
   // Fetch product details
@@ -40,7 +45,28 @@ const ProductDetail = () => {
     fetchProduct();
   }, [id]);
 
-  // Fetch cart + wishlist only if customer
+  // Generate dummy reviews once when product loads
+  useEffect(() => {
+    if (product) {
+      const generatedReviews = [
+        {
+          id: 1,
+          name: randomNames[Math.floor(Math.random() * randomNames.length)],
+          text: `I really liked the ${product.name}. Quality is excellent and delivery was quick!`,
+          rating: 5,
+        },
+        {
+          id: 2,
+          name: randomNames[Math.floor(Math.random() * randomNames.length)],
+          text: `The ${product.name} is worth the price. Fresh and nicely packed.`,
+          rating: 4,
+        },
+      ];
+      setReviews(generatedReviews);
+    }
+  }, [product]);
+
+  // Fetch cart + wishlist
   useEffect(() => {
     if (!token || user?.role !== "customer") return;
 
@@ -62,7 +88,7 @@ const ProductDetail = () => {
       .catch(() => setWishlistIds([]));
   }, [token, user]);
 
-  // Fetch recommended products
+  // Fetch recommended
   useEffect(() => {
     if (!product?.category) return;
     const fetchRecommended = async () => {
@@ -79,7 +105,7 @@ const ProductDetail = () => {
     fetchRecommended();
   }, [product]);
 
-  // Render stars
+  // Stars
   const renderStars = (rating) =>
     Array.from({ length: 5 }, (_, i) => (
       <AiFillStar
@@ -90,16 +116,12 @@ const ProductDetail = () => {
 
   const isExpired = (expiryDate) => new Date(expiryDate) < new Date();
 
-  // Toggle cart
+  // Cart toggle
   const toggleCart = async () => {
-    if (!token) {
-      toast.error("Please log in to add to cart");
-      return;
-    }
-    if (user?.role !== "customer") {
-      toast.error("Only customers can purchase");
-      return;
-    }
+    if (!token) return toast.error("Please log in to add to cart");
+    if (user?.role !== "customer")
+      return toast.error("Only customers can purchase");
+
     const exists = cartIds.includes(product._id);
     try {
       await axios.post(
@@ -118,16 +140,12 @@ const ProductDetail = () => {
     }
   };
 
-  // Toggle wishlist
+  // Wishlist toggle
   const toggleWishlist = async () => {
-    if (!token) {
-      toast.error("Please log in to use wishlist");
-      return;
-    }
-    if (user?.role !== "customer") {
-      toast.error("Only customers can use wishlist");
-      return;
-    }
+    if (!token) return toast.error("Please log in to use wishlist");
+    if (user?.role !== "customer")
+      return toast.error("Only customers can use wishlist");
+
     const exists = wishlistIds.includes(product._id);
     try {
       await axios.post(
@@ -146,9 +164,12 @@ const ProductDetail = () => {
     }
   };
 
-  if (error) return <p className="text-center mt-10 text-red-600">{error}</p>;
+  if (error)
+    return <p className="text-center mt-10 text-red-600">{error}</p>;
   if (!product)
-    return <p className="text-center mt-10 text-gray-600">Loading...</p>;
+    return (
+      <p className="text-center mt-10 text-gray-600">Loading...</p>
+    );
 
   const discount = Math.floor(product.price * 0.1);
   const discountedPrice = product.price - discount;
@@ -161,6 +182,7 @@ const ProductDetail = () => {
       transition={{ duration: 0.6 }}
     >
       <div className="max-w-5xl mx-auto bg-white rounded-xl shadow-lg p-6 grid md:grid-cols-2 gap-6">
+        {/* Left: Image */}
         <div className="relative">
           <img
             src={product.imageUrl || "https://via.placeholder.com/400"}
@@ -179,6 +201,7 @@ const ProductDetail = () => {
           </button>
         </div>
 
+        {/* Right: Info */}
         <div>
           <h2 className="text-3xl font-bold text-green-800 mb-2">
             {product.name}
@@ -186,6 +209,7 @@ const ProductDetail = () => {
           <p className="text-lg text-gray-700 mb-1 font-semibold">
             Category: {product.category}
           </p>
+
           <div className="mb-2">
             <span className="inline-block bg-yellow-300 text-yellow-900 px-3 py-1 text-xs rounded-full mb-1 font-semibold">
               Limited Time Offer ,Get Delivery In 20 Minutes With Discounts !!!
@@ -201,6 +225,7 @@ const ProductDetail = () => {
               </span>
             </p>
           </div>
+
           <p className="text-sm text-gray-600 mb-4">{product.description}</p>
 
           <div className="flex gap-2 items-center mb-2">
@@ -214,7 +239,9 @@ const ProductDetail = () => {
             </span>
           )}
 
+          {/* Actions */}
           <div className="mt-6 flex flex-wrap items-center gap-4">
+            {/* Quantity */}
             <div>
               <label className="block text-sm font-medium mb-1">
                 Quantity:
@@ -223,13 +250,16 @@ const ProductDetail = () => {
                 type="number"
                 value={quantity}
                 onChange={(e) =>
-                  setQuantity(Math.max(1, parseInt(e.target.value, 10) || 1))
+                  setQuantity(
+                    Math.max(1, parseInt(e.target.value, 10) || 1)
+                  )
                 }
                 min={1}
                 className="border px-3 py-2 rounded w-24"
               />
             </div>
 
+            {/* Add to Cart */}
             <motion.button
               whileTap={{ scale: 0.95 }}
               whileHover={{ scale: 1.05 }}
@@ -242,18 +272,14 @@ const ProductDetail = () => {
                 : "Add to Cart"}
             </motion.button>
 
+            {/* Buy Now */}
             <motion.button
               whileTap={{ scale: 0.95 }}
               whileHover={{ scale: 1.05 }}
               onClick={() => {
-                if (!token) {
-                  toast.error("Please log in to purchase");
-                  return;
-                }
-                if (user?.role !== "customer") {
-                  toast.error("Only customers can purchase");
-                  return;
-                }
+                if (!token) return toast.error("Please log in to purchase");
+                if (user?.role !== "customer")
+                  return toast.error("Only customers can purchase");
                 setShowOrder(true);
               }}
               className="bg-blue-600 text-white px-5 py-2 mt-5 md:mt-8 rounded-lg hover:bg-blue-700 transition shadow-md"
@@ -261,16 +287,18 @@ const ProductDetail = () => {
               Buy Now
             </motion.button>
 
+            {/* Reviews Button */}
             <motion.button
               whileTap={{ scale: 0.95 }}
               whileHover={{ scale: 1.05 }}
-              onClick={() => navigate("/reviews")}
+              onClick={() => setShowReviews((prev) => !prev)}
               className="bg-rose-500 text-white px-5 py-2 mt-5 md:mt-8 rounded-lg hover:bg-rose-700 transition shadow-md"
             >
-              Reviews
+              {showReviews ? "Hide Reviews" : "Reviews"}
             </motion.button>
           </div>
 
+          {/* Order Options */}
           {showOrder && (
             <div className="mt-6">
               <OrderOptions
@@ -281,9 +309,38 @@ const ProductDetail = () => {
               />
             </div>
           )}
+
+          {/* Reviews Section */}
+          {showReviews && (
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.4 }}
+              className="mt-6 space-y-4 bg-gray-50 p-4 rounded-lg shadow"
+            >
+              <h3 className="text-xl font-bold text-gray-800 mb-4">
+                Customer Reviews
+              </h3>
+              {reviews.map((review) => (
+                <div
+                  key={review.id}
+                  className="p-3 bg-white rounded-lg shadow-sm border"
+                >
+                  <div className="flex items-center justify-between mb-1">
+                    <span className="font-semibold text-gray-900">
+                      {review.name}
+                    </span>
+                    <div className="flex">{renderStars(review.rating)}</div>
+                  </div>
+                  <p className="text-sm text-gray-700">{review.text}</p>
+                </div>
+              ))}
+            </motion.div>
+          )}
         </div>
       </div>
 
+      {/* Recommended Products */}
       {recommended.length > 0 && (
         <div className="max-w-5xl mx-auto mt-10">
           <h3 className="text-3xl font-bold text-green-800 mb-4">
@@ -293,7 +350,6 @@ const ProductDetail = () => {
             {recommended.map((item, idx) => {
               const discount = Math.floor(item.price * 0.1);
               const discountedPrice = item.price - discount;
-
               return (
                 <motion.div
                   key={item._id}

@@ -134,13 +134,25 @@ const About = () => {
             </div>
           ))}
         </div>
+          {/* View More Reviews Button */}
+        <div className="text-center mt-10">
+          <Link
+            to="/reviews"
+            className="inline-block bg-rose-500 text-white px-8 py-3 rounded-full font-semibold shadow-md hover:bg-rose-700 transition duration-300"
+          >
+            View More Reviews
+          </Link>
+        </div>
+        
       </div>
 
+      
+          
       {/* Final CTA */}
       <div className="text-center mt-10">
         <h3 className="text-3xl font-bold text-green-900 mb-4">Ready to Taste the Difference?</h3>
         <p className="mb-6 text-gray-700">Join our mission of healthy eating, strong soil, and connected community.</p>
-        <Link to="/" className="bg-gradient-to-r from-red-600 to-yellow-500 hover:from-blue-700 hover:to-pink-300 text-white px-10 py-3 rounded-full font-bold shadow-lg transition-all duration-300">
+        <Link to="/" className="bg-gradient-to-r from-red-600 to-yellow-500 hover:from-red-700 hover:to-yellow-600 text-white px-10 py-3 rounded-full font-bold shadow-lg transition-all duration-300">
           Shop Our Produce
         </Link>
         
