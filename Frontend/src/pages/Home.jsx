@@ -34,7 +34,7 @@ const Home = () => {
   // fetch all products
   useEffect(() => {
     const fetchAll = async () => {
-      const res = await axios.get('http://localhost:5000/api/products');
+      const res = await axios.get('https://farmer-market-place-c2wq.onrender.com/api/products');
       setProducts(res.data);
       setFiltered(res.data);
     };
@@ -46,7 +46,7 @@ const Home = () => {
     if (!token || user?.role !== 'customer') return;
 
     axios
-      .get('http://localhost:5000/api/wishlist', {
+      .get('https://farmer-market-place-c2wq.onrender.com/api/wishlist', {
         headers: { Authorization: `Bearer ${token}` },
       })
       .then((res) => {
@@ -57,7 +57,7 @@ const Home = () => {
       .catch((err) => console.error('Wishlist fetch error:', err));
 
     axios
-      .get('http://localhost:5000/api/cart', {
+      .get('https://farmer-market-place-c2wq.onrender.com/api/cart', {
         headers: { Authorization: `Bearer ${token}` },
       })
       .then((res) => {
@@ -129,7 +129,7 @@ const Home = () => {
     const exists = wishlistIds.includes(id);
     try {
       await axios.post(
-        `http://localhost:5000/api/wishlist/${exists ? 'remove' : 'add'}`,
+        `https://farmer-market-place-c2wq.onrender.com/api/wishlist/${exists ? 'remove' : 'add'}`,
         { productId: id },
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -158,7 +158,7 @@ const Home = () => {
     }
     try {
       await axios.post(
-        `http://localhost:5000/api/cart/${exists ? 'remove' : 'add'}`,
+        `https://farmer-market-place-c2wq.onrender.com/api/cart/${exists ? 'remove' : 'add'}`,
         { productId: id, quantity },
         { headers: { Authorization: `Bearer ${token}` } }
       );

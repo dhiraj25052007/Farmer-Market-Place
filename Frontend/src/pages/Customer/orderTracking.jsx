@@ -22,7 +22,7 @@ const OrderTracking = () => {
 
   const fetchStatus = async () => {
     try {
-      const res = await axios.get(`http://localhost:5000/api/orders/track/${id}`, {
+      const res = await axios.get(`https://farmer-market-place-c2wq.onrender.com/api/orders/track/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setStatus(res.data.status);

@@ -38,7 +38,7 @@ const AddProduct = () => {
 
     try {
       const res = await axios.post(
-        'http://localhost:5000/api/products',
+        'https://farmer-market-place-c2wq.onrender.com/api/products',
         { ...formData },
         {
           headers: {

@@ -21,7 +21,7 @@ const ViewOrder = () => {
         
         // if (!user?.id || !user?._id ) return;
         const res = await axios.get(
-          `http://localhost:5000/api/orders/user/${user.id||user._id}`,
+          `https://farmer-market-place-c2wq.onrender.com/api/orders/user/${user.id||user._id}`,
           {
             headers: { Authorization: `Bearer ${token}` },
           }
@@ -45,7 +45,7 @@ const ViewOrder = () => {
     );
     if (!confirm) return;
     try {
-      await axios.delete(`http://localhost:5000/api/orders/${id}`, {
+      await axios.delete(`https://farmer-market-place-c2wq.onrender.com/api/orders/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setOrders((prev) => prev.filter((o) => o._id !== id));

@@ -23,7 +23,7 @@ const EditFProfile = () => {
     e.preventDefault();
     try {
       const res = await axios.put(
-        `http://localhost:5000/api/users/${user._id || user.id}`,
+        `https://farmer-market-place-c2wq.onrender.com/api/users/${user._id || user.id}`,
         formData,
         { headers: { Authorization: `Bearer ${token}` } }
       );

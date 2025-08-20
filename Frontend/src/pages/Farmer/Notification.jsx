@@ -14,7 +14,7 @@ const Notification = () => {
   useEffect(() => {
     const fetchNotifications = async () => {
       try {
-        const res = await axios.get('http://localhost:5000/api/notifications', {
+        const res = await axios.get('https://farmer-market-place-c2wq.onrender.com/api/notifications', {
           headers: { Authorization: `Bearer ${token}` },
         });
         setNotifications(res.data);
@@ -27,7 +27,7 @@ const Notification = () => {
 
   const markAsRead = async (id) => {
     try {
-      await axios.post(`http://localhost:5000/api/notifications/mark-read/${id}`, {}, {
+      await axios.post(`https://farmer-market-place-c2wq.onrender.com/api/notifications/mark-read/${id}`, {}, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setNotifications((prev) => prev.filter((n) => n._id !== id));

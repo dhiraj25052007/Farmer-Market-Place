@@ -60,8 +60,7 @@ function AppRoutes() {
         <Route path="/about" element={<About />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/certificate" element={<Certification />} />
-                <Route path="/reviews" element={<Reviews />} />
-
+        <Route path="/reviews" element={<Reviews />} />
 
         <Route path="/unauthorized" element={<UnauthorizedAnimation />} />
 
@@ -96,6 +95,8 @@ function AppRoutes() {
             <Route path="track-order/:id" element={<OrderTracking />} />
             <Route path="wishlist" element={<Wishlist />} />
             <Route path="cart" element={<Cart />} />
+            <Route path="roadmap" element={<Roadmap />} />
+
             <Route path="profile" element={<Profile />} />
             <Route path="FAQs" element={<FAQs />} />
           </Route>

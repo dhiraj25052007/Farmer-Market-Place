@@ -54,7 +54,7 @@ const OrderOptions = ({ items, total, productId, quantity }) => {
         };
 
     try {
-      await axios.post('http://localhost:5000/api/orders', payload, {
+      await axios.post('https://farmer-market-place-c2wq.onrender.com/api/orders', payload, {
         headers: { Authorization: `Bearer ${token}` },
       });
       toast.success('Order placed successfully: Thanks', { duration: 1000 });

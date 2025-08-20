@@ -15,7 +15,7 @@ const Cart = () => {
 
   const fetchCart = async () => {
     try {
-      const res = await axios.get('http://localhost:5000/api/cart', {
+      const res = await axios.get('https://farmer-market-place-c2wq.onrender.com/api/cart', {
         headers: { Authorization: `Bearer ${token}` },
       });
       setCartItems(res.data.items);
@@ -27,7 +27,7 @@ const Cart = () => {
   const removeFromCart = async (productId) => {
     try {
       await axios.post(
-        'http://localhost:5000/api/cart/remove',
+        'https://farmer-market-place-c2wq.onrender.com/api/cart/remove',
         { productId },
         { headers: { Authorization: `Bearer ${token}` } }
       );

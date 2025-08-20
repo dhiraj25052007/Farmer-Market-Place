@@ -36,7 +36,7 @@ const ProductDetail = () => {
   useEffect(() => {
     const fetchProduct = async () => {
       try {
-        const res = await axios.get(`http://localhost:5000/api/products/${id}`);
+        const res = await axios.get(`https://farmer-market-place-c2wq.onrender.com/api/products/${id}`);
         setProduct(res.data);
       } catch {
         setError("Product not found");
@@ -71,7 +71,7 @@ const ProductDetail = () => {
     if (!token || user?.role !== "customer") return;
 
     axios
-      .get("http://localhost:5000/api/cart", {
+      .get("https://farmer-market-place-c2wq.onrender.com/api/cart", {
         headers: { Authorization: `Bearer ${token}` },
         withCredentials: true,
       })
@@ -81,7 +81,7 @@ const ProductDetail = () => {
       .catch(() => setCartIds([]));
 
     axios
-      .get("http://localhost:5000/api/wishlist", {
+      .get("https://farmer-market-place-c2wq.onrender.com/api/wishlist", {
         headers: { Authorization: `Bearer ${token}` },
       })
       .then((res) => setWishlistIds(res.data.products.map((p) => p._id)))
@@ -93,7 +93,7 @@ const ProductDetail = () => {
     if (!product?.category) return;
     const fetchRecommended = async () => {
       try {
-        const res = await axios.get(`http://localhost:5000/api/products`);
+        const res = await axios.get(`https://farmer-market-place-c2wq.onrender.com/api/products`);
         const filtered = res.data.filter(
           (p) => p.category === product.category && p._id !== product._id
         );
@@ -125,7 +125,7 @@ const ProductDetail = () => {
     const exists = cartIds.includes(product._id);
     try {
       await axios.post(
-        `http://localhost:5000/api/cart/${exists ? "remove" : "add"}`,
+        `https://farmer-market-place-c2wq.onrender.com/api/cart/${exists ? "remove" : "add"}`,
         { productId: product._id, quantity },
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -149,7 +149,7 @@ const ProductDetail = () => {
     const exists = wishlistIds.includes(product._id);
     try {
       await axios.post(
-        `http://localhost:5000/api/wishlist/${exists ? "remove" : "add"}`,
+        `https://farmer-market-place-c2wq.onrender.com/api/wishlist/${exists ? "remove" : "add"}`,
         { productId: product._id },
         { headers: { Authorization: `Bearer ${token}` } }
       );

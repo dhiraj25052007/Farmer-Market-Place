@@ -35,7 +35,7 @@ const EditProduct = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.put(`http://localhost:5000/api/products/${product._id}`, formData, {
+      await axios.put(`https://farmer-market-place-c2wq.onrender.com/api/products/${product._id}`, formData, {
         headers: {
           Authorization: `Bearer ${token}`
         }

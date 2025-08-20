@@ -14,6 +14,7 @@ import {
   FiChevronRight,
   FiChevronDown,
   FiChevronUp,
+  FiMap,
 } from "react-icons/fi";
 
 const CustomerLayout = () => {
@@ -35,6 +36,8 @@ const CustomerLayout = () => {
     { to: "wishlist", label: "Wishlist", icon: <FiHeart /> },
     { to: "cart", label: "Cart", icon: <FiShoppingCart /> },
     { to: "FAQs", label: "FAQs", icon: <FiHelpCircle /> },
+    { to: "roadmap", label: "Roadmap" ,icon: <FiMap /> },
+    
   ];
 
   return (
