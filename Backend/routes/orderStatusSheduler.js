@@ -3,7 +3,7 @@ const Order = require('../models/Order');
 const Notification = require('../models/Notification');
 
 const STATUS_FLOW = ["Pending", "Processing", "Shipped", "Delivered"];
-const INTERVAL_MINUTES = 5;
+const INTERVAL_MINUTES = 3;
 
 async function updateOrderStatuses() {
   const now = Date.now();
