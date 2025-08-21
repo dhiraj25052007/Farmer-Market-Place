@@ -19,8 +19,11 @@ const app = express();
 
 app.use(
   cors({
-    origin: "http://localhost:5173",
-    credentials: true, // important if cookies/token involved
+    origin: [
+      "http://localhost:5173",
+      "https://farmfresh-main.netlify.app",
+    ],
+    credentials: true, // allow cookies/token
   })
 );
 
