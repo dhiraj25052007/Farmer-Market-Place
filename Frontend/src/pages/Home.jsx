@@ -6,10 +6,10 @@ import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { Carousel } from 'react-responsive-carousel';
 import 'react-responsive-carousel/lib/styles/carousel.min.css';
-import banner1 from '../assets/banner1.png';
-import banner2 from '../assets/banner2.png';
-import banner3 from '../assets/banner3.png';
-import banner4 from '../assets/banner4.png';
+import banner1 from '../assets/banner6.png';
+import banner2 from '../assets/banner7.png';
+import banner3 from '../assets/banner8.png';
+import banner4 from '../assets/banner5.png';
 import { RotateCcw } from 'lucide-react';
 import { AiFillStar, AiOutlineHeart, AiFillHeart, AiOutlineShoppingCart } from 'react-icons/ai';
 import { useAuth } from '../context/AuthContext';
@@ -191,7 +191,7 @@ const Home = () => {
               <img
                 src={src}
                 alt={`Banner ${idx + 1}`}
-                className="h-72 w-full object-cover"
+                className="h-100 w-full object-fill rounded-2xl"
               />
               {/* Centered advertisement text */}
               <div className="absolute inset-0 flex items-center justify-center">
@@ -202,10 +202,10 @@ const Home = () => {
                        animate-fadeIn"
                 >
                   {idx === 0 &&
-                    'FarmFresh — Freshness Delivered to Your Doorstep'}
-                  {idx === 1 && 'Organic Goodness from Farm to Home'}
-                  {idx === 2 && 'Eat Fresh, Live Healthy with FarmFresh'}
-                  {idx === 3 && 'Supporting Farmers, Nourishing Families'}
+                    ''}
+                  {idx === 1 && ''}
+                  {idx === 2 && ''}
+                  {idx === 3 && ''}
                 </h2>
               </div>
             </div>
